@@ -34,9 +34,29 @@ export const ArticleCard = ({
         
         <div className="flex-1 space-y-3">
           <div className="flex items-start justify-between gap-4">
-            <h3 className="font-semibold text-foreground leading-6 line-clamp-2">
-              {article.title || "Untitled Article"}
-            </h3>
+            <div className="flex-1">
+              <h3 className="font-semibold text-foreground leading-6 line-clamp-2">
+                {article.title || "Untitled Article"}
+              </h3>
+              
+              {article.img_url && (
+                <div className={`mt-3 transition-all duration-300 ${
+                  condensed ? 'w-16 h-16' : 'w-full h-48'
+                }`}>
+                  <img
+                    src={article.img_url}
+                    alt={article.title || "Article image"}
+                    className={`object-cover rounded-md transition-all duration-300 ${
+                      condensed ? 'w-16 h-16' : 'w-full h-48'
+                    }`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
+            </div>
             <a
               href={article.link}
               target="_blank"

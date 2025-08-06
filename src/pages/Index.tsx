@@ -148,60 +148,63 @@ const Index = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-200px)]">
+        {/* Center Curate Button Row */}
+        {selectedArticles.size > 0 && (
+          <div className="flex justify-center items-center py-6 border-b border-border mb-8">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                {selectedArticles.size} article{selectedArticles.size !== 1 ? 's' : ''} selected
+              </span>
+              <Button 
+                variant="curate" 
+                onClick={handleCurateList}
+                disabled={isProcessing}
+                className="gap-2"
+                size="lg"
+              >
+                {isProcessing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : null}
+                Curate Selected Articles
+              </Button>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-300px)]">
           {/* Left Side - All Articles */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold text-foreground">All Articles</h2>
-                <Badge variant="secondary">{articles.length}</Badge>
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="condensed-toggle" className="text-sm text-muted-foreground">
-                    Condensed
-                  </Label>
-                  <Switch
-                    id="condensed-toggle"
-                    checked={isCondensed}
-                    onCheckedChange={setIsCondensed}
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort('index')}
-                    className="gap-2 text-xs"
-                  >
-                    Index {getSortIcon('index')}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort('source')}
-                    className="gap-2 text-xs"
-                  >
-                    Source {getSortIcon('source')}
-                  </Button>
-                </div>
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-semibold text-foreground">All Articles</h2>
+              <Badge variant="secondary">{articles.length}</Badge>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="condensed-toggle" className="text-sm text-muted-foreground">
+                  Condensed
+                </Label>
+                <Switch
+                  id="condensed-toggle"
+                  checked={isCondensed}
+                  onCheckedChange={setIsCondensed}
+                />
               </div>
-              {selectedArticles.size > 0 && (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">
-                    {selectedArticles.size} selected
-                  </span>
-                  <Button 
-                    variant="curate" 
-                    onClick={handleCurateList}
-                    disabled={isProcessing}
-                    className="gap-2"
-                  >
-                    {isProcessing ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : null}
-                    Curate List
-                  </Button>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort('index')}
+                  className="gap-2 text-xs"
+                >
+                  Index {getSortIcon('index')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort('source')}
+                  className="gap-2 text-xs"
+                >
+                  Source {getSortIcon('source')}
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-4 h-full overflow-y-auto pr-2">
@@ -223,33 +226,28 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Separator */}
-          <Separator orientation="vertical" className="hidden lg:block" />
-
           {/* Right Side - Curated Articles */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold text-foreground">Curated List</h2>
-                <Badge variant="default">{curatedArticles.length}</Badge>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort('index')}
-                    className="gap-2 text-xs"
-                  >
-                    Index {getSortIcon('index')}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort('source')}
-                    className="gap-2 text-xs"
-                  >
-                    Source {getSortIcon('source')}
-                  </Button>
-                </div>
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-semibold text-foreground">Curated List</h2>
+              <Badge variant="default">{curatedArticles.length}</Badge>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort('index')}
+                  className="gap-2 text-xs"
+                >
+                  Index {getSortIcon('index')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort('source')}
+                  className="gap-2 text-xs"
+                >
+                  Source {getSortIcon('source')}
+                </Button>
               </div>
             </div>
 
