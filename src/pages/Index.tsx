@@ -17,7 +17,7 @@ const Index = () => {
     loading, 
     selectedArticles,
     toggleArticleSelection,
-    addToCuratedList,
+    setCuratedList,
     removeFromCuratedList,
     clearSelection,
     refetch
@@ -90,28 +90,26 @@ const Index = () => {
   });
 
   const handleCurateList = async () => {
-    if (selectedArticles.size === 0) {
-      toast({
-        title: "No articles selected",
-        description: "Please select articles to add to your curated list.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsProcessing(true);
-    const success = await addToCuratedList(Array.from(selectedArticles));
+    const success = await setCuratedList(Array.from(selectedArticles));
     
     if (success) {
-      toast({
-        title: "Articles curated!",
-        description: `Added ${selectedArticles.size} article(s) to your curated list.`,
-      });
+      if (selectedArticles.size === 0) {
+        toast({
+          title: "Curated list cleared!",
+          description: "All articles have been removed from your curated list.",
+        });
+      } else {
+        toast({
+          title: "Articles curated!",
+          description: `Curated list updated with ${selectedArticles.size} article(s).`,
+        });
+      }
       // Keep articles selected for additional curation
     } else {
       toast({
         title: "Error",
-        description: "Failed to add articles to curated list. Please try again.",
+        description: "Failed to update curated list. Please try again.",
         variant: "destructive",
       });
     }
@@ -175,21 +173,21 @@ const Index = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Center Curate Button Row */}
-        {selectedArticles.size > 0 && (
-          <div className="flex flex-col items-center py-6 border-b border-border mb-8">
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="curate" 
-                onClick={handleCurateList}
-                disabled={isProcessing}
-                className="gap-2"
-                size="lg"
-              >
-                {isProcessing ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : null}
-                Curate Selected Articles
-              </Button>
+        <div className="flex flex-col items-center py-6 border-b border-border mb-8">
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="curate" 
+              onClick={handleCurateList}
+              disabled={isProcessing}
+              className="gap-2"
+              size="lg"
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : null}
+              {selectedArticles.size === 0 ? 'Clear Curated List' : 'Update Curated List'}
+            </Button>
+            {selectedArticles.size > 0 && (
               <Button 
                 variant="outline" 
                 onClick={clearSelection}
@@ -197,12 +195,15 @@ const Index = () => {
               >
                 Clear Selection
               </Button>
-            </div>
-            <span className="text-sm text-muted-foreground mt-2">
-              {selectedArticles.size} article{selectedArticles.size !== 1 ? 's' : ''} selected
-            </span>
+            )}
           </div>
-        )}
+          <span className="text-sm text-muted-foreground mt-2">
+            {selectedArticles.size > 0 
+              ? `${selectedArticles.size} article${selectedArticles.size !== 1 ? 's' : ''} selected`
+              : 'No articles selected - will clear curated list'
+            }
+          </span>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-300px)]">
           {/* Left Side - All Articles */}

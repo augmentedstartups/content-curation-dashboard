@@ -36,26 +36,37 @@ export const useArticles = () => {
     }
   };
 
-  const addToCuratedList = async (selectedIndices: number[]) => {
+  const setCuratedList = async (selectedIndices: number[]) => {
     try {
-      const articlesToAdd = articles.filter(article => 
-        selectedIndices.includes(article.index)
-      );
-
-      // Remove the index field since it will be auto-generated
-      const articlesWithoutIndex = articlesToAdd.map(({ index, ...article }) => article);
-
-      const { error } = await supabase
+      // First, clear the entire curated list
+      const { error: deleteError } = await supabase
         .from('curated_list')
-        .insert(articlesWithoutIndex);
+        .delete()
+        .neq('index', 0); // Delete all records (using neq with 0 since indexes are always > 0)
 
-      if (error) throw error;
+      if (deleteError) throw deleteError;
+
+      // Only proceed if there are articles to add
+      if (selectedIndices.length > 0) {
+        const articlesToAdd = articles.filter(article => 
+          selectedIndices.includes(article.index)
+        );
+
+        // Remove the index field since it will be auto-generated
+        const articlesWithoutIndex = articlesToAdd.map(({ index, ...article }) => article);
+
+        const { error: insertError } = await supabase
+          .from('curated_list')
+          .insert(articlesWithoutIndex);
+
+        if (insertError) throw insertError;
+      }
       
       // Refresh curated articles
       await fetchCuratedArticles();
       return true;
     } catch (error) {
-      console.error('Error adding to curated list:', error);
+      console.error('Error updating curated list:', error);
       return false;
     }
   };
@@ -110,7 +121,7 @@ export const useArticles = () => {
     loading,
     selectedArticles,
     toggleArticleSelection,
-    addToCuratedList,
+    setCuratedList,
     removeFromCuratedList,
     clearSelection,
     refetch: async () => {
