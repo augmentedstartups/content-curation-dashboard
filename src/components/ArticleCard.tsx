@@ -10,6 +10,7 @@ interface ArticleCardProps {
   onSelectionChange?: (selected: boolean) => void;
   showCheckbox?: boolean;
   condensed?: boolean;
+  showExternalLink?: boolean;
 }
 
 export const ArticleCard = ({ 
@@ -17,7 +18,8 @@ export const ArticleCard = ({
   isSelected = false, 
   onSelectionChange, 
   showCheckbox = true,
-  condensed = false
+  condensed = false,
+  showExternalLink = true
 }: ArticleCardProps) => {
   return (
     <Card className={`group p-6 transition-all duration-200 hover:shadow-md border ${
@@ -57,14 +59,16 @@ export const ArticleCard = ({
                 </div>
               )}
             </div>
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 p-1 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ExternalLinkIcon className="h-4 w-4" />
-            </a>
+            {showExternalLink && (
+              <a
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 p-1 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ExternalLinkIcon className="h-4 w-4" />
+              </a>
+            )}
           </div>
 
           {!condensed && article.content_snippet && (

@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useArticles } from "@/hooks/useArticles";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, RefreshCw, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Loader2, RefreshCw, Trash2, ArrowUpDown, ArrowUp, ArrowDown, ExternalLinkIcon } from "lucide-react";
 import { extractSourceFromUrl } from "@/lib/utils";
 
 const Index = () => {
@@ -24,10 +24,30 @@ const Index = () => {
   } = useArticles();
   
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isCondensed, setIsCondensed] = useState(false);
   const [sortBy, setSortBy] = useState<'index' | 'source'>('index');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const { toast } = useToast();
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+      toast({
+        title: "Articles refreshed",
+        description: "Successfully refreshed articles and curated list.",
+      });
+    } catch (error) {
+      toast({
+        title: "Refresh failed",
+        description: "Failed to refresh articles. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleSort = (field: 'index' | 'source') => {
     if (sortBy === field) {
@@ -87,7 +107,7 @@ const Index = () => {
         title: "Articles curated!",
         description: `Added ${selectedArticles.size} article(s) to your curated list.`,
       });
-      clearSelection();
+      // Keep articles selected for additional curation
     } else {
       toast({
         title: "Error",
@@ -132,16 +152,22 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                className="h-6 w-auto mb-3"
+              />
               <h1 className="text-3xl font-bold text-foreground">Article Curator</h1>
               <p className="text-muted-foreground mt-1">Select and curate articles for your newsletter</p>
             </div>
             <Button
-              variant="outline"
-              onClick={refetch}
-              className="gap-2"
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="h-8 w-8 p-0"
             >
-              <RefreshCw className="h-4 w-4" />
-              Refresh
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
@@ -150,11 +176,8 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Center Curate Button Row */}
         {selectedArticles.size > 0 && (
-          <div className="flex justify-center items-center py-6 border-b border-border mb-8">
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                {selectedArticles.size} article{selectedArticles.size !== 1 ? 's' : ''} selected
-              </span>
+          <div className="flex flex-col items-center py-6 border-b border-border mb-8">
+            <div className="flex items-center gap-3">
               <Button 
                 variant="curate" 
                 onClick={handleCurateList}
@@ -167,7 +190,17 @@ const Index = () => {
                 ) : null}
                 Curate Selected Articles
               </Button>
+              <Button 
+                variant="outline" 
+                onClick={clearSelection}
+                size="sm"
+              >
+                Clear Selection
+              </Button>
             </div>
+            <span className="text-sm text-muted-foreground mt-2">
+              {selectedArticles.size} article{selectedArticles.size !== 1 ? 's' : ''} selected
+            </span>
           </div>
         )}
 
@@ -265,15 +298,27 @@ const Index = () => {
                     <ArticleCard
                       article={article}
                       showCheckbox={false}
+                      condensed={isCondensed}
+                      showExternalLink={false}
                     />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => handleRemoveFromCurated(article.index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="absolute top-4 right-4 flex flex-col gap-1">
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 text-muted-foreground hover:text-foreground transition-colors bg-background/80 rounded"
+                      >
+                        <ExternalLinkIcon className="h-4 w-4" />
+                      </a>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => handleRemoveFromCurated(article.index)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 ))
               )}
