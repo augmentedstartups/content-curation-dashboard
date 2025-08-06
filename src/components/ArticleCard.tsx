@@ -2,6 +2,7 @@ import { Article } from "@/types/article";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon, ExternalLinkIcon } from "lucide-react";
+import { extractSourceFromUrl } from "@/lib/utils";
 
 interface ArticleCardProps {
   article: Article;
@@ -53,8 +54,8 @@ export const ArticleCard = ({
           )}
 
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            {article.source && (
-              <span className="font-medium">{article.source}</span>
+            {article.link && (
+              <span className="font-medium">{extractSourceFromUrl(article.link)}</span>
             )}
             {article.pub_date && (
               <div className="flex items-center gap-1">

@@ -7,7 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useArticles } from "@/hooks/useArticles";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, RefreshCw, Trash2 } from "lucide-react";
+import { Loader2, RefreshCw, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { extractSourceFromUrl } from "@/lib/utils";
 
 const Index = () => {
   const { 
@@ -24,7 +25,49 @@ const Index = () => {
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCondensed, setIsCondensed] = useState(false);
+  const [sortBy, setSortBy] = useState<'index' | 'source'>('index');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const { toast } = useToast();
+
+  const handleSort = (field: 'index' | 'source') => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
+  };
+
+  const getSortIcon = (field: 'index' | 'source') => {
+    if (sortBy !== field) {
+      return <ArrowUpDown className="h-4 w-4" />;
+    }
+    return sortOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
+  };
+
+  const sortedArticles = [...articles].sort((a, b) => {
+    if (sortBy === 'index') {
+      const comparison = a.index - b.index;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    } else {
+      const sourceA = extractSourceFromUrl(a.link).toLowerCase();
+      const sourceB = extractSourceFromUrl(b.link).toLowerCase();
+      const comparison = sourceA.localeCompare(sourceB);
+      return sortOrder === 'asc' ? comparison : -comparison;
+    }
+  });
+
+  const sortedCuratedArticles = [...curatedArticles].sort((a, b) => {
+    if (sortBy === 'index') {
+      const comparison = a.index - b.index;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    } else {
+      const sourceA = extractSourceFromUrl(a.link).toLowerCase();
+      const sourceB = extractSourceFromUrl(b.link).toLowerCase();
+      const comparison = sourceA.localeCompare(sourceB);
+      return sortOrder === 'asc' ? comparison : -comparison;
+    }
+  });
 
   const handleCurateList = async () => {
     if (selectedArticles.size === 0) {
@@ -122,6 +165,24 @@ const Index = () => {
                     onCheckedChange={setIsCondensed}
                   />
                 </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort('index')}
+                    className="gap-2 text-xs"
+                  >
+                    Index {getSortIcon('index')}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort('source')}
+                    className="gap-2 text-xs"
+                  >
+                    Source {getSortIcon('source')}
+                  </Button>
+                </div>
               </div>
               {selectedArticles.size > 0 && (
                 <div className="flex items-center gap-3">
@@ -149,7 +210,7 @@ const Index = () => {
                   <p className="text-muted-foreground">No articles found</p>
                 </div>
               ) : (
-                articles.map((article) => (
+                sortedArticles.map((article) => (
                   <ArticleCard
                     key={article.index}
                     article={article}
@@ -167,9 +228,29 @@ const Index = () => {
 
           {/* Right Side - Curated Articles */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <h2 className="text-xl font-semibold text-foreground">Curated List</h2>
-              <Badge variant="default">{curatedArticles.length}</Badge>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-semibold text-foreground">Curated List</h2>
+                <Badge variant="default">{curatedArticles.length}</Badge>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort('index')}
+                    className="gap-2 text-xs"
+                  >
+                    Index {getSortIcon('index')}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSort('source')}
+                    className="gap-2 text-xs"
+                  >
+                    Source {getSortIcon('source')}
+                  </Button>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-4 h-full overflow-y-auto pr-2">
@@ -181,7 +262,7 @@ const Index = () => {
                   </p>
                 </div>
               ) : (
-                curatedArticles.map((article) => (
+                sortedCuratedArticles.map((article) => (
                   <div key={article.index} className="relative group">
                     <ArticleCard
                       article={article}

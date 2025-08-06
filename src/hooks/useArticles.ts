@@ -13,7 +13,7 @@ export const useArticles = () => {
       const { data, error } = await supabase
         .from('n8nnewssummerizer')
         .select('*')
-        .order('pub_date', { ascending: false });
+        .order('index', { ascending: false });
 
       if (error) throw error;
       setArticles(data || []);
@@ -27,7 +27,7 @@ export const useArticles = () => {
       const { data, error } = await supabase
         .from('curated_list')
         .select('*')
-        .order('pub_date', { ascending: false });
+        .order('index', { ascending: false });
 
       if (error) throw error;
       setCuratedArticles(data || []);
