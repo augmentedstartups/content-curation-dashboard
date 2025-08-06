@@ -3,6 +3,8 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { useArticles } from "@/hooks/useArticles";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, RefreshCw, Trash2 } from "lucide-react";
@@ -21,6 +23,7 @@ const Index = () => {
   } = useArticles();
   
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCondensed, setIsCondensed] = useState(false);
   const { toast } = useToast();
 
   const handleCurateList = async () => {
@@ -109,6 +112,16 @@ const Index = () => {
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-semibold text-foreground">All Articles</h2>
                 <Badge variant="secondary">{articles.length}</Badge>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="condensed-toggle" className="text-sm text-muted-foreground">
+                    Condensed
+                  </Label>
+                  <Switch
+                    id="condensed-toggle"
+                    checked={isCondensed}
+                    onCheckedChange={setIsCondensed}
+                  />
+                </div>
               </div>
               {selectedArticles.size > 0 && (
                 <div className="flex items-center gap-3">
@@ -142,6 +155,7 @@ const Index = () => {
                     article={article}
                     isSelected={selectedArticles.has(article.index)}
                     onSelectionChange={(selected) => toggleArticleSelection(article.index)}
+                    condensed={isCondensed}
                   />
                 ))
               )}

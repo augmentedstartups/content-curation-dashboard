@@ -8,13 +8,15 @@ interface ArticleCardProps {
   isSelected?: boolean;
   onSelectionChange?: (selected: boolean) => void;
   showCheckbox?: boolean;
+  condensed?: boolean;
 }
 
 export const ArticleCard = ({ 
   article, 
   isSelected = false, 
   onSelectionChange, 
-  showCheckbox = true 
+  showCheckbox = true,
+  condensed = false
 }: ArticleCardProps) => {
   return (
     <Card className={`group p-6 transition-all duration-200 hover:shadow-md border ${
@@ -44,7 +46,7 @@ export const ArticleCard = ({
             </a>
           </div>
 
-          {article.content_snippet && (
+          {!condensed && article.content_snippet && (
             <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
               {article.content_snippet}
             </p>
