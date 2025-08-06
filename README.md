@@ -12,6 +12,8 @@ This is a **newsletter curation tool** that streamlines the process of selecting
 - **Efficiency**: Traditional tools like n8n are cumbersome for content curation
 - **Brand Voice**: Maintaining personal touch in automated workflows
 
+> **Want to automate more of your business processes?** Check out our [AI Business Systems Framework](https://www.augmentedstartups.com/ai-business-systems-framework) where 42,000+ innovators have learned to reclaim 15+ hours per week using proven automation systems.
+
 ### Our Workflow
 
 **Phase 1: Content Aggregation & Curation** (Current)
@@ -21,9 +23,13 @@ We pull articles from 6 major tech news sources including:
 - TechCrunch
 - And other leading publications
 
+*The backend automation uses n8n workflows to aggregate content from these sources. Get access to these proven n8n workflow systems at [augmentedstartups.com/ai-business-systems-framework](https://www.augmentedstartups.com/ai-business-systems-framework).*
+
 Watch our workflow explanation:
 
 [![Newsletter Automation Workflow](https://img.youtube.com/vi/YpnLSpJ2bEQ/0.jpg)](https://youtu.be/YpnLSpJ2bEQ)
+
+# The Content Curation Dashboard
 
 The custom frontend interface allows you to:
 - View all articles with images, snippets, and metadata
@@ -31,6 +37,9 @@ The custom frontend interface allows you to:
 - Select articles that align with your interests and audience
 - Build curated lists with ease
 - Maintain personal control over every piece of content
+
+![Newsletter Curation Dashboard](public/dash_screenshot.jpg)
+*Our intuitive dashboard interface for curating newsletter content*
 
 **Phase 2: Article Generation & Publishing** (Coming Next)
 The next step will be to:
@@ -42,6 +51,8 @@ The next step will be to:
 ### Why Not Full Automation?
 
 While I *could* deploy an AI agent to fully automate this process, **personal curation is the key differentiator**. The goal is to select news that I would personally be interested in and that reflects the quality and perspective my audience expects. This tool gives you the efficiency of automation while preserving the human touch that makes great newsletters.
+
+> **Ready to automate other business processes?** Our [AI Business Systems Framework](https://www.augmentedstartups.com/ai-business-systems-framework) shows you exactly how to identify and automate the right processes while maintaining quality control.
 
 ## Features
 
@@ -64,8 +75,8 @@ While I *could* deploy an AI agent to fully automate this process, **personal cu
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
-   cd curate-splurge
+   git clone https://github.com/augmentedstartups/content-curation-dashboard.git
+   cd content-curation-dashboard
    ```
 
 2. **Install dependencies**
@@ -94,6 +105,7 @@ While I *could* deploy an AI agent to fully automate this process, **personal cu
 - 🤖 **Use AI**: Your AI assistant (Claude, ChatGPT, etc.) can help troubleshoot any installation issues
 - 📖 **Check the docs**: Most issues are covered in the Vite and React documentation
 - 🔧 **Common fixes**: Try `npm ci` if you have dependency issues
+- 🚀 **Want more automation?** Join 42,000+ innovators learning proven automation systems at [augmentedstartups.com/ai-business-systems-framework](https://www.augmentedstartups.com/ai-business-systems-framework)
 
 ## Tech Stack
 
@@ -137,5 +149,7 @@ This project is for personal use in newsletter curation workflows.
 ---
 
 <div align="center">
-  <img src="/logo.png" alt="Project Logo" height="60">
+  <a href="https://www.augmentedstartups.com/ai-business-systems-framework" target="_blank">
+    <img src="public/logo.png" alt="Project Logo" height="30">
+  </a>
 </div>
